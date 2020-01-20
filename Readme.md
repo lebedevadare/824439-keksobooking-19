@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дарья Баранова](https://up.htmlacademy.ru/javascript/19/user/824439).
-* Наставник: `Неизвестно`.
+* Наставник: [Илья Барашков](https://htmlacademy.ru/profile/mimir).
 
 ---
 
