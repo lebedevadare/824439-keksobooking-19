@@ -33,8 +33,7 @@ var getArrayPartRandom = function (array) {
   return array.slice(0, getRandomInteger(1, array.length));
 };
 
-var createObject;
-createObject = function (number) {
+var createObject = function (number) {
   var locationX = (getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth) - 1/2*PIN_X_OFFSET);
   var locationY = (getRandomInteger(130, 630) - PIN_Y_OFFSET);
   return {
@@ -62,10 +61,12 @@ createObject = function (number) {
 
 };
 
-var createAdds  = function (AddsCount) {
-  for (var i = 0; i < AddsCount; i++) {
-    ads[i] = createObject();
+var createAdds = function (addsCount) {
+  var tempAds = [];
+  for (var i = 1; i <= addsCount; i++) {
+    tempAds.push(createObject(QANTITY_ADS));
   }
+  return tempAds;
 };
 
 var renderAdd = function (ad) {
