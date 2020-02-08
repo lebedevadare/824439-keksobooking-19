@@ -34,7 +34,7 @@ var getArrayPartRandom = function (array) {
 };
 
 var createObject = function (number) {
-  var locationX = (getRandomInteger(mapPinsBlock.clientLeft, mapPinsBlock.clientWidth) - 1 / 2 * PIN_X_OFFSET);
+  var locationX = (getRandomInteger(mapPinsBlock.clientLeft, mapPinsBlock.clientWidth) - (1 / 2 * PIN_X_OFFSET));
   var locationY = (getRandomInteger(130, 630) - PIN_Y_OFFSET);
   return {
     'author': {
@@ -72,13 +72,22 @@ var createAdds = function (addsCount) {
 var renderAdd = function (ad) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = ad.locationX + 'px';
-  pinElement.style.top = ad.locationY + 'px';
+  pinElement.style.width = ad.locationY + 'px';
   pinElement.querySelector('img').src = ad.author.avatar;
   pinElement.querySelector('img').alt = ad.offer.title;
   return pinElement;
 };
 
-mapAd.classList.remove('map--faded');
+var renderAdds = function (adds) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adds.length; i++) {
+    fragment.appendChild(renderAdd(createObject(QANTITY_ADS)));
+  }
+  mapPinsBlock.appendChild(fragment);
+};
 
+mapAd.classList.remove('map--faded');
+createAdds(QANTITY_ADS);
+renderAdds(QANTITY_ADS);
 
 
