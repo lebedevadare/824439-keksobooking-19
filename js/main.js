@@ -6,11 +6,11 @@ var mapPinsBlock = mapAd.querySelector('.map__pins');
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
-var title = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
-var description = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
-var typeFix = ['palace', 'flat', 'house', 'bungalo'];
+var headers = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
+var descriptions = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
+var typesOfHousing = ['palace', 'flat', 'house', 'bungalo'];
 var checkins = ['12:00', '13:00', '14:00'];
-var checkout = ['12:00', '13:00', '14:00'];
+var checkouts = ['12:00', '13:00', '14:00'];
 var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var price = [5000, 1000, 2000, 3000, 500, 1500, 2500];
 var rooms = [1, 2, 6, 4, 3, 5, 7, 8];
@@ -41,16 +41,16 @@ var createObject = function (number) {
       'avatar': getRandomAvatarImages(number)
     },
     'offer': {
-      'title': getRandomArrayElements(title),
+      'title': getRandomArrayElements(headers),
       'address': locationX + ',' + locationY,
       'price': getRandomArrayElements(price),
-      'type': getRandomArrayElements(typeFix),
+      'type': getRandomArrayElements(typesOfHousing),
       'rooms': getRandomArrayElements(rooms),
       'guests': getRandomArrayElements(guests),
       'checkin': getRandomArrayElements(checkins),
-      'checkout': getRandomArrayElements(checkout),
+      'checkout': getRandomArrayElements(checkouts),
       'features': getArrayPartRandom(features),
-      'description': getRandomArrayElements(description),
+      'description': getRandomArrayElements(descriptions),
       'photos': getArrayPartRandom(photos),
     },
     'location': {
