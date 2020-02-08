@@ -1,6 +1,6 @@
 'use strict';
 
-var pinTemplate = document.querySelector('#pin').content.querySelector('map__pin');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var QANTITY_ADS = 8;
@@ -26,7 +26,7 @@ var getRandomArrayElements = function (array) {
 };
 
 var getRandomAvatarImages = function (number) {
-  return 'img/avatars/user0' + getRandomArrayElements(number) + '.png';
+  return 'img/avatars/user0' + number + '.png';
 };
 
 var getArrayPartRandom = function (array) {
@@ -64,15 +64,15 @@ var createObject = function (number) {
 var createAdds = function (addsCount) {
   var tempAds = [];
   for (var i = 1; i <= addsCount; i++) {
-    tempAds.push(createObject(QANTITY_ADS));
+    tempAds.push(createObject(i));
   }
   return tempAds;
 };
 
 var renderAdd = function (ad) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.top = ad.location.x + 'px';
-  pinElement.style.width = ad.location.y + 'px';
+  pinElement.style.left = ad.location.x + 'px';
+  pinElement.style.top = ad.location.y + 'px';
   pinElement.querySelector('img').src = ad.author.avatar;
   pinElement.querySelector('img').alt = ad.offer.title;
   return pinElement;
