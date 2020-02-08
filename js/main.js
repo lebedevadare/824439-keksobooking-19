@@ -1,6 +1,6 @@
 'use strict';
 
-var adTemplate = document.querySelector('#pin').content.querySelector('map__pin');
+var pinTemplate = document.querySelector('#pin').content.querySelector('map__pin');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map-pins');
 var QANTITY_ADS = 8;
@@ -34,7 +34,7 @@ var getArrayPartRandom = function (array) {
 };
 
 var createObject = function (number) {
-  var locationX = (getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth) - 1/2*PIN_X_OFFSET);
+  var locationX = (getRandomInteger(mapPinsBlock.clientLeft, mapPinsBlock.clientWidth) - 1 / 2 * PIN_X_OFFSET);
   var locationY = (getRandomInteger(130, 630) - PIN_Y_OFFSET);
   return {
     'author': {
@@ -70,11 +70,12 @@ var createAdds = function (addsCount) {
 };
 
 var renderAdd = function (ad) {
-  var adElement = adTemplate.cloneNode(true);
-  adElement.querySelector('.popup__avatar').textContent = ad.avatar;
-  adElement.querySelector('popup__title').textContent = ad.title;
-  adElement.querySelector('.wizard-eyes').style.fill = ad. eyesColor;
-  return adElement;
+  var pinElement = pinTemplate.cloneNode(true);
+  pinElement.style.left = ad.locationX + 'px';
+  pinElement.style.top = ad.locationY + 'px';
+  pinElement.querySelector('img').src = ad.author.avatar;
+  pinElement.querySelector('img').alt = ad.offer.title;
+  return pinElement;
 };
 
 mapAd.classList.remove('map--faded');
