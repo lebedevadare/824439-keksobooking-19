@@ -1,11 +1,13 @@
 'use strict';
 
-var adTemplate = document.querySelector('#card').content.querySelector('.popup');
+var adTemplate = document.querySelector('#pin').content.querySelector('map__pin');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map-pins');
 var QANTITY_ADS = 8;
-var PIN_HEIGHT = 70;
-var PIN_WIDTH = 50;
+var PIN_X_OFFSET = 20;
+var PIN_Y_OFFSET = 40;
+var title = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
+var description = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
 var typeFix = ['palace', 'flat', 'house', 'bungalo'];
 var checkins = ['12:00', '13:00', '14:00'];
 var checkout = ['12:00', '13:00', '14:00'];
@@ -14,7 +16,6 @@ var price = [5000, 1000, 2000, 3000, 500, 1500, 2500];
 var rooms = [1, 2, 6, 4, 3, 5, 7, 8];
 var guests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var ads = [];
 
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -33,14 +34,16 @@ var getArrayPartRandom = function (array) {
 };
 
 var createObject;
-createObject = function () {
+createObject = function (number) {
+  var locationX = (getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth) - 1/2*PIN_X_OFFSET);
+  var locationY = (getRandomInteger(130, 630) - PIN_Y_OFFSET);
   return {
     'author': {
-      'avatar': getRandomAvatarImages(QANTITY_ADS)
+      'avatar': getRandomAvatarImages(number)
     },
     'offer': {
-      'title': 'Заголовок предложения',
-      'address': (location['x'] - 1 / 2 * PIN_WIDTH) + ',' + (location['y'] + PIN_HEIGHT),
+      'title': getRandomArrayElements(title),
+      'address': locationX + ',' + locationY,
       'price': getRandomArrayElements(price),
       'type': getRandomArrayElements(typeFix),
       'rooms': getRandomArrayElements(rooms),
@@ -48,7 +51,7 @@ createObject = function () {
       'checkin': getRandomArrayElements(checkins),
       'checkout': getRandomArrayElements(checkout),
       'features': getArrayPartRandom(features),
-      'description': 'строка с описанием',
+      'description': getRandomArrayElements(description),
       'photos': getArrayPartRandom(photos),
     },
     'location': {
@@ -56,6 +59,7 @@ createObject = function () {
       'y': getRandomInteger(130, 630)
     }
   };
+
 };
 
 var createAdds  = function (AddsCount) {
