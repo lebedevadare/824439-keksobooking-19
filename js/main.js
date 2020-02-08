@@ -2,7 +2,7 @@
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('map__pin');
 var mapAd = document.querySelector('.map');
-var mapPinsBlock = mapAd.querySelector('.map-pins');
+var mapPinsBlock = mapAd.querySelector('.map_pins');
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
