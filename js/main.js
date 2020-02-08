@@ -2,7 +2,7 @@
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('map__pin');
 var mapAd = document.querySelector('.map');
-var mapPinsBlock = mapAd.querySelector('.map_pins');
+var mapPinsBlock = mapAd.querySelector('.map__pins');
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
@@ -34,7 +34,7 @@ var getArrayPartRandom = function (array) {
 };
 
 var createObject = function (number) {
-  var locationX = (getRandomInteger(mapPinsBlock.clientLeft, mapPinsBlock.clientWidth) - (1 / 2 * PIN_X_OFFSET));
+  var locationX = (getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth) - PIN_X_OFFSET);
   var locationY = (getRandomInteger(130, 630) - PIN_Y_OFFSET);
   return {
     'author': {
@@ -54,8 +54,8 @@ var createObject = function (number) {
       'photos': getArrayPartRandom(photos),
     },
     'location': {
-      'x': getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth),
-      'y': getRandomInteger(130, 630)
+      'x': locationX,
+      'y': locationY
     }
   };
 
@@ -71,8 +71,8 @@ var createAdds = function (addsCount) {
 
 var renderAdd = function (ad) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.left = ad.locationX + 'px';
-  pinElement.style.width = ad.locationY + 'px';
+  pinElement.style.top = ad.location.x + 'px';
+  pinElement.style.width = ad.location.y + 'px';
   pinElement.querySelector('img').src = ad.author.avatar;
   pinElement.querySelector('img').alt = ad.offer.title;
   return pinElement;
@@ -81,13 +81,12 @@ var renderAdd = function (ad) {
 var renderAdds = function (adds) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adds.length; i++) {
-    fragment.appendChild(renderAdd(createObject(QANTITY_ADS)));
+    fragment.appendChild(renderAdd(adds[i]));
   }
   mapPinsBlock.appendChild(fragment);
 };
 
 mapAd.classList.remove('map--faded');
-createAdds(QANTITY_ADS);
-renderAdds(QANTITY_ADS);
+renderAdds(createAdds(QANTITY_ADS));
 
 
