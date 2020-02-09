@@ -90,3 +90,26 @@ mapAd.classList.remove('map--faded');
 renderAdds(createAdds(QANTITY_ADS));
 
 
+var pinsTemplate = document.querySelector('#card').content.querySelector('.popup');
+var mapCardBlock = document.querySelector('.map')
+var renderOfferCard = function (card) {
+  var cardElement = pinsTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = card.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
+  //здесь для блок .popup__type
+  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests;
+  cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после  ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  cardElement.querySelector('.popup__features').textContent = card.offer.features;
+  cardElement.querySelector('.popup__description').textContent = card.offer.description;
+  return cardElement;
+};
+
+var renderCards = function (cards) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < cards.length; i++) {
+    fragment.appendChild(renderOfferCard(cards[i]));
+  }
+  mapCardBlock.appendChild(fragment);
+};
+renderCards(renderOfferCard(QANTITY_ADS));
