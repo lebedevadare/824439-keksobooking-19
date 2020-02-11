@@ -1,8 +1,10 @@
 'use strict';
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
+var filterContainer = mapAd.querySelector('.mapAd');
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
@@ -47,7 +49,7 @@ var createObject = function (number) {
     },
     'offer': {
       'title': getRandomArrayElements(headers),
-      'address': locationX + ',' + locationY,
+      'address': locationX + ', ' + locationY,
       'price': getRandomArrayElements(price),
       'type': getRandomArrayElements(typesOfHousing),
       'rooms': getRandomArrayElements(rooms),
@@ -83,38 +85,35 @@ var renderAdd = function (ad) {
   return pinElement;
 };
 
-var renderAdds = function (adds) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adds.length; i++) {
-    fragment.appendChild(renderAdd(adds[i]));
-  }
-  mapPinsBlock.appendChild(fragment);
-};
-
-mapAd.classList.remove('map--faded');
-renderAdds(createAdds(QANTITY_ADS));
-
-
-var pinsTemplate = document.querySelector('#card').content.querySelector('.popup');
-var mapCardBlock = document.querySelector('.map')
 var renderOfferCard = function (card) {
-  var cardElement = pinsTemplate.cloneNode(true);
+  var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-  //здесь для блок .popup__type
-  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests;
+  cardElement.querySelector('.popup__type').textContent = card.types.flat;
+  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + 'гостей';
   cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после  ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
   cardElement.querySelector('.popup__features').textContent = card.offer.features;
   cardElement.querySelector('.popup__description').textContent = card.offer.description;
   return cardElement;
 };
 
-var renderCards = function (cards) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < cards.length; i++) {
-    fragment.appendChild(renderOfferCard(cards[i]));
+var renderCard = function (cardElement) {
+  for (var i = 0; i < cardElement.length; i++) {
+    mapAd.insertBefore(cardElement, filterContainer);
   }
-  mapCardBlock.appendChild(fragment);
 };
-renderCards(renderOfferCard(QANTITY_ADS));
+
+var renderAdds = function (adds) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adds.length; i++) {
+    fragment.appendChild(renderAdd(adds[i]));
+  }
+  mapPinsBlock.appendChild(fragment);
+  renderCard(renderOfferCard(adds[0]));
+};
+
+mapAd.classList.remove('map--faded');
+renderAdds(createAdds(QANTITY_ADS));
+
+
