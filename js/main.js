@@ -5,8 +5,6 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.popup
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var filterContainer = mapAd.querySelector('.mapAd');
-var popupFeatures = document.querySelector('.popup__features');
-var photoPopup = document.querySelector('.popup__photos');
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
@@ -20,7 +18,7 @@ var price = [5000, 1000, 2000, 3000, 500, 1500, 2500];
 var rooms = [1, 2, 6, 4, 3, 5, 7, 8];
 var guests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var types = {
+var typesHousing = {
   'flat': 'Квартира',
   'bungalo': 'Бунгало',
   'house': 'Дом',
@@ -91,11 +89,29 @@ var createFeatures = function (feature) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < feature.length; i++) {
     var featureElement = document.createElement('li');
-    fragment.appendChild(popupFeatures);
+    featureElement.classList.add('.popup__feature');
+    featureElement.classList.add('.popup__feature--' + 'feature[i]');
+    fragment.appendChild();
   }
-  featureElement.classList.add('.popup__feature');
-  featureElement.classList.add('.popup__feature-- + feature[i]');
-}
+  return fragment;
+};
+var createPhotos = function (photos) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    var photoElement = document.createElement('img');
+    photoElement.classList.add('.popup__photo');
+    photoElement.querySelector('.popup__photos').width = '70';
+    photoElement.querySelector('.popup__photos').height = '70';
+    photoElement.querySelector('.popup__photos').alt = 'Аватар пользователя';
+    photoElement.querySelector('.popup__photos').src = card.photos;
+    fragment.appendChild();
+  }
+  return fragment;
+};
+
+
+
+
 
 var renderOfferCard = function (card) {
   var cardElement = cardTemplate.cloneNode(true);
@@ -108,10 +124,6 @@ var renderOfferCard = function (card) {
   popupFeatures.innerHTML = ' ';
   cardElement.querySelector('.popup__features').textContent = createFeatures(card.offer.features);
   photoPopup.innerHTML = ' ';
-  cardElement.querySelector('.popup__photos').width = '70';
-  cardElement.querySelector('.popup__photos').height = '70';
-  cardElement.querySelector('.popup__photos').alt = 'Аватар пользователя';
-  cardElement.querySelector('.popup__photos').src = card.photos[i];
   cardElement.querySelector('.popup__description').textContent = card.offer.description;
   return cardElement;
 };
