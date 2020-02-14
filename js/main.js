@@ -1,13 +1,12 @@
 'use strict';
-
+var QANTITY_ADS = 8;
+var PIN_X_OFFSET = 20;
+var PIN_Y_OFFSET = 40;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
-var filterContainer = mapAd.querySelector('.mapAd');
-var QANTITY_ADS = 8;
-var PIN_X_OFFSET = 20;
-var PIN_Y_OFFSET = 40;
+var filterContainer = mapAd.querySelector('.map__filters-container');
 var headers = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
 var descriptions = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
 var typesOfHousing = ['palace', 'flat', 'house', 'bungalo'];
@@ -65,7 +64,6 @@ var createObject = function (number) {
       'y': locationY
     }
   };
-
 };
 
 var createAdds = function (addsCount) {
@@ -85,53 +83,51 @@ var renderAdd = function (ad) {
   return pinElement;
 };
 
-var createFeatures = function (feature) {
+var createFeatures = function (adFeatures) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < feature.length; i++) {
+  for (var i = 0; i < adFeatures.length; i++) {
     var featureElement = document.createElement('li');
-    featureElement.classList.add('.popup__feature');
-    featureElement.classList.add('.popup__feature--' + 'feature[i]');
-    fragment.appendChild();
+    featureElement.classList.add('popup__feature');
+    featureElement.classList.add('popup__feature--' + adFeatures[i]);
+    fragment.appendChild(featureElement);
   }
   return fragment;
 };
-var createPhotos = function (photos) {
+
+var createPhotos = function (adPhotos) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < photos.length; i++) {
+  for (var i = 0; i < adPhotos.length; i++) {
     var photoElement = document.createElement('img');
     photoElement.classList.add('.popup__photo');
-    photoElement.querySelector('.popup__photos').width = '70';
-    photoElement.querySelector('.popup__photos').height = '70';
-    photoElement.querySelector('.popup__photos').alt = 'Аватар пользователя';
-    photoElement.querySelector('.popup__photos').src = card.photos;
-    fragment.appendChild();
+    photoElement.width = '70';
+    photoElement.height = '70';
+    photoElement.alt = 'Аватар пользователя';
+    photoElement.src = adPhotos[i];
+    fragment.appendChild(photoElement);
   }
   return fragment;
 };
-
-
-
-
 
 var renderOfferCard = function (card) {
   var cardElement = cardTemplate.cloneNode(true);
+  var popupFeatures = cardElement.querySelector('.popup__features');
+  var photoPopup = cardElement.querySelector('.popup__photos');
   cardElement.querySelector('.popup__title').textContent = card.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-  cardElement.querySelector('.popup__type').textContent = card.types[i];
-  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + 'гостей';
-  cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после  ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
-  popupFeatures.innerHTML = ' ';
-  cardElement.querySelector('.popup__features').textContent = createFeatures(card.offer.features);
-  photoPopup.innerHTML = ' ';
+  cardElement.querySelector('.popup__type').textContent = typesHousing[card.offer.type];
+  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  popupFeatures.innerHTML = '';
+  popupFeatures.appendChild(createFeatures(card.offer.features));
+  photoPopup.innerHTML = '';
+  photoPopup.appendChild(createPhotos(card.offer.photos));
   cardElement.querySelector('.popup__description').textContent = card.offer.description;
   return cardElement;
 };
 
 var renderCard = function (cardElement) {
-  for (var i = 0; i < cardElement.length; i++) {
-    mapAd.insertBefore(cardElement, filterContainer);
-  }
+  mapAd.insertBefore(cardElement, filterContainer);
 };
 
 var renderAdds = function (adds) {
@@ -145,5 +141,3 @@ var renderAdds = function (adds) {
 
 mapAd.classList.remove('map--faded');
 renderAdds(createAdds(QANTITY_ADS));
-
-
