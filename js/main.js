@@ -6,7 +6,7 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
-var mapPinMousedown = mapPinsBlock.querySelector('.map__pin—main');
+var mapPinMousedown = mapPinsBlock.querySelector('.map__pin--main');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var headers = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
 var descriptions = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
@@ -143,11 +143,10 @@ var renderAdds = function (adds) {
 //mapAd.classList.remove('map--faded');
 //renderAdds(createAdds(QANTITY_ADS));
 
-var logMouseButton = function (evt) {
-  if (typeof evt === 'object') {
-    switch (evt.mapPinMousedown) {
-      case 0: console.log('пРивет');
-       // renderAdds(createAdds(QANTITY_ADS));
+var logMouseButton = function (e) {
+  if (typeof e === 'object') {
+    switch (e.button) {
+      case 0: renderAdds(createAdds(QANTITY_ADS));
     }
   }
 };
