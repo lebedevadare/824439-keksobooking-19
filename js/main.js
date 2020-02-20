@@ -7,6 +7,7 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPinMousedown = mapPinsBlock.querySelector('.map__pin--main');
+var mapPin = mapPinsBlock.querySelector('button');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var fildSets = form.querySelectorAll('fieldset');
@@ -139,7 +140,7 @@ var renderAdds = function (adds) {
     fragment.appendChild(renderAdd(adds[i]));
   }
   mapPinsBlock.appendChild(fragment);
-  renderCard(renderOfferCard(adds[0]));
+  //renderCard(renderOfferCard(adds[0]));
 };
 
 var deActivateInput = function () {
@@ -157,11 +158,13 @@ var activateInput = function () {
 deActivateInput();
 
 var logMouseButton = function (e) {
-  if (typeof e === 'object' && e.mapPinMousedown === 0) {
+  if (typeof e === 'object' && e.button === 0) {
+    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
     mapAd.classList.remove('map—faded');
+    mapPin.classList.remove('map__pin--main');
+    mapPinsBlock.classList.remove('map__title');
     renderAdds(createAdds(QANTITY_ADS));
     activateInput();
-    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
   }
 };
 
