@@ -2,6 +2,7 @@
 var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
+var ENTER_KEY = 'Enter'
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 //var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
@@ -163,9 +164,21 @@ var logMouseButton = function (e) {
     mapAd.classList.remove('map—faded');
     mapPin.classList.remove('map__pin--main');
     mapPinsBlock.classList.remove('map__title');
+    form.classList.remove('ad-form--disabled');
     renderAdds(createAdds(QANTITY_ADS));
     activateInput();
   }
 };
-
+var onActivationKeydown = function (e) {
+  if (e.key === ENTER_KEY) {
+    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
+    mapAd.classList.remove('map—faded');
+    mapPin.classList.remove('map__pin--main');
+    mapPinsBlock.classList.remove('map__title');
+    form.classList.remove('ad-form--disabled');
+    renderAdds(createAdds(QANTITY_ADS));
+    activateInput();
+  }
+};
 mapPinMousedown.addEventListener('mousedown', logMouseButton);
+mapPinMousedown.addEventListener('keydown', onActivationKeydown);
