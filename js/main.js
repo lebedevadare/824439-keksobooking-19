@@ -3,11 +3,13 @@ var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+//var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPinMousedown = mapPinsBlock.querySelector('.map__pin--main');
 var filterContainer = mapAd.querySelector('.map__filters-container');
+var form = document.querySelector('.ad-form');
+var fildSets = form.querySelectorAll('fieldset');
 var headers = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
 var descriptions = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
 var typesOfHousing = ['palace', 'flat', 'house', 'bungalo'];
@@ -109,23 +111,23 @@ var createPhotos = function (adPhotos) {
   return fragment;
 };
 
-var renderOfferCard = function (card) {
-  var cardElement = cardTemplate.cloneNode(true);
-  var popupFeatures = cardElement.querySelector('.popup__features');
-  var photoPopup = cardElement.querySelector('.popup__photos');
-  cardElement.querySelector('.popup__title').textContent = card.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
-  cardElement.querySelector('.popup__type').textContent = typesHousing[card.offer.type];
-  cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
-  popupFeatures.innerHTML = '';
-  popupFeatures.appendChild(createFeatures(card.offer.features));
-  photoPopup.innerHTML = '';
-  photoPopup.appendChild(createPhotos(card.offer.photos));
-  cardElement.querySelector('.popup__description').textContent = card.offer.description;
-  return cardElement;
-};
+//var renderOfferCard = function (card) {
+  //var cardElement = cardTemplate.cloneNode(true);
+  //var popupFeatures = cardElement.querySelector('.popup__features');
+  //var photoPopup = cardElement.querySelector('.popup__photos');
+  //cardElement.querySelector('.popup__title').textContent = card.offer.title;
+  //cardElement.querySelector('.popup__text--address').textContent = card.offer.address;
+  //cardElement.querySelector('.popup__text--price').textContent = card.offer.price + '₽/ночь';
+  //cardElement.querySelector('.popup__type').textContent = typesHousing[card.offer.type];
+  //cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
+  //cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  //popupFeatures.innerHTML = '';
+  //popupFeatures.appendChild(createFeatures(card.offer.features));
+  //photoPopup.innerHTML = '';
+  //photoPopup.appendChild(createPhotos(card.offer.photos));
+  //cardElement.querySelector('.popup__description').textContent = card.offer.description;
+  //return cardElement;
+//};
 
 var renderCard = function (cardElement) {
   mapAd.insertBefore(cardElement, filterContainer);
@@ -140,14 +142,27 @@ var renderAdds = function (adds) {
   renderCard(renderOfferCard(adds[0]));
 };
 
-//mapAd.classList.remove('map--faded');
-//renderAdds(createAdds(QANTITY_ADS));
-
-var logMouseButton = function (e) {
-  if (typeof e === 'object') {
-    switch (e.button) {
-      case 0: renderAdds(createAdds(QANTITY_ADS));
-    }
+var deActivateInput = function () {
+  for (var i = 0; i < fildSets.length; i++) {
+    fildSets[i].disabled = true;
   }
 };
+
+var activateInput = function () {
+  for (var i = 0; i < fildSets.length; i++) {
+    fildSets[i].disabled = false;
+  }
+};
+
+deActivateInput();
+
+var logMouseButton = function (e) {
+  if (typeof e === 'object' && e.mapPinMousedown === 0) {
+    mapAd.classList.remove('map—faded');
+    renderAdds(createAdds(QANTITY_ADS));
+    activateInput();
+    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
+  }
+};
+
 mapPinMousedown.addEventListener('mousedown', logMouseButton);
