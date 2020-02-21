@@ -12,6 +12,10 @@ var mapPin = mapPinsBlock.querySelector('button');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var fildSets = form.querySelectorAll('fieldset');
+var adress = document.querySelector('.ad-form__label');
+var selectRoom = document.querySelector('#room_number');
+var selectGuestsAll = document.querySelector('#capacity');
+var selectGuests = document.querySelectorAll('#capacity option');
 var headers = ['Уютное гнездышко для молодоженов', 'Прекрасный отдых не только для двоих', 'Роскошные аппартаменты с современным дизайном', 'Лучший номер с видом на море'];
 var descriptions = ['Великолепная квартира-студия в центре Токио', 'Подходит как туристам, так и бизнесменам', 'Квартира полностью укомплектована и недавно отремонтирована', 'Дом с приведениями', 'Все включено'];
 var typesOfHousing = ['palace', 'flat', 'house', 'bungalo'];
@@ -182,3 +186,24 @@ var onActivationKeydown = function (e) {
 };
 mapPinMousedown.addEventListener('mousedown', logMouseButton);
 mapPinMousedown.addEventListener('keydown', onActivationKeydown);
+
+var onSelectRoom = function (e) {
+
+  var count = e.target.value;
+
+  selectGuests.forEach(function (option) {
+    option.remove();
+    if (option.value !== '0' && Number(option.value) <= Number(count)) {
+      selectGuestsAll.appendChild(option);
+    }
+
+    if (count === '100') {
+      selectGuests.forEach(function (element) {
+        element.remove();
+      });
+      selectGuestsAll.appendChild(option);
+    }
+  });
+};
+
+selectRoom.addEventListener('change', onSelectRoom);
