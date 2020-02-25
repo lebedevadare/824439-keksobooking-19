@@ -5,6 +5,7 @@ var PIN_Y_OFFSET = 40;
 var ENTER_KEY = 'Enter'
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 //var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+var adressTemplate = document.querySelector('#address').content.querySelector('.ad-form__label');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPinMousedown = mapPinsBlock.querySelector('.map__pin--main');
@@ -160,32 +161,42 @@ var activateInput = function () {
   }
 };
 
-deActivateInput();
+var checksGuests = function () {
+  var count = selectGuests.target.value;
+  selectGuests.forEach(function (option) {
+    option.remove();
+    if (option.value !== '0' && Number(option.value) <= Number(count)) {
+      selectGuestsAll.appendChild(option);
+    }
+
+    if (count === '100') {
+      selectGuests.forEach(function (element) {
+        element.remove();
+      });
+      selectGuestsAll.appendChild(option);
+    }
+  });
+};
+
+
+var getActivation = function (e) {
+  if (typeof e === 'object' && e.button === 0) {
+    mapAd.classList.remove('map--faded');
+    form.classList.remove('ad-form--disabled');
+    renderAdds(createAdds(QANTITY_ADS));
+    activateInput();
+    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
+  }
+};
 
 var logMouseButton = function (e) {
-  if (typeof e === 'object' && e.button === 0) {
-    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
-    mapAd.classList.remove('map—faded');
-    mapPin.classList.remove('map__pin--main');
-    mapPinsBlock.classList.remove('map__title');
-    form.classList.remove('ad-form--disabled');
-    renderAdds(createAdds(QANTITY_ADS));
-    activateInput();
-  }
+  getActivation(e);
 };
+
 var onActivationKeydown = function (e) {
-  if (e.key === ENTER_KEY) {
-    mapPinMousedown.removeEventListener('mousedown', logMouseButton);
-    mapAd.classList.remove('map—faded');
-    mapPin.classList.remove('map__pin--main');
-    mapPinsBlock.classList.remove('map__title');
-    form.classList.remove('ad-form--disabled');
-    renderAdds(createAdds(QANTITY_ADS));
-    activateInput();
-  }
+  getActivation(e);
 };
-mapPinMousedown.addEventListener('mousedown', logMouseButton);
-mapPinMousedown.addEventListener('keydown', onActivationKeydown);
+
 
 var onSelectRoom = function (e) {
 
@@ -205,5 +216,7 @@ var onSelectRoom = function (e) {
     }
   });
 };
-
+deActivateInput();
+mapPinMousedown.addEventListener('mousedown', logMouseButton);
+mapPinMousedown.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
