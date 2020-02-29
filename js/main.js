@@ -214,7 +214,7 @@ var onSelectRoom = function (e) {
 };
 
 var getValueAddres = function () {
-  adress.value = location.x - PIN_X_OFFSET + ',' + location.y - PIN_Y_OFFSET / 2;
+  adress.value = (location.x - PIN_X_OFFSET) + ',' + (location.y - PIN_Y_OFFSET / 2);
   return adress;
 };
 
