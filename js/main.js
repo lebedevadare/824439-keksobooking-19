@@ -173,7 +173,7 @@ var checksGuests = function () {
 };
 
 
-var getActivation = function () {
+var activation = function () {
   mapAd.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
   checksGuests();
@@ -184,7 +184,7 @@ var getActivation = function () {
 
 var onPinMousedown = function (e) {
   if (typeof e === 'object' && e.button === 0) {
-    getActivation(e);
+    activation(e);
   }
   mapPin.removeEventListener('mousedown', onPinMousedown);
   mapPin.removeEventListener('keydown', onActivationKeydown);
@@ -192,7 +192,7 @@ var onPinMousedown = function (e) {
 
 var onActivationKeydown = function (e) {
   if (e.key === ENTER_KEY) {
-    getActivation(e);
+    activation(e);
   }
   mapPin.removeEventListener('keydown', onActivationKeydown);
   mapPin.removeEventListener('mousedown', onPinMousedown);
