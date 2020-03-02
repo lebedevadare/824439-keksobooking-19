@@ -3,11 +3,16 @@ var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
 var ENTER_KEY = 'Enter';
-// var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var MAIN_PIN_X_OFFSET = 31;
+var MAIN_PIN_Y_OFFSET = 31;
+var MAIN_PIN_Y_ARROW_OFFSET = 84;
+
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 // var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
-var mapPinMousedown = mapPinsBlock.querySelector('.map__pin--main');
+var mapPin = mapPinsBlock.querySelector('.map__pin--main');
+var mapPinImage = mapPin.querySelector('img');
 // var mapPin = mapPinsBlock.querySelector('button');
 // var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
@@ -83,14 +88,14 @@ var createAdds = function (addsCount) {
   return tempAds;
 };
 
-// var renderAdd = function (ad) {
-//   var pinElement = pinTemplate.cloneNode(true);
-//   pinElement.style.left = ad.location.x + 'px';
-//   pinElement.style.top = ad.location.y + 'px';
-//   pinElement.querySelector('img').src = ad.author.avatar;
-//   pinElement.querySelector('img').alt = ad.offer.title;
-//   return pinElement;
-// };
+var renderAdd = function (ad) {
+  var pinElement = pinTemplate.cloneNode(true);
+  pinElement.style.left = ad.location.x + 'px';
+  pinElement.style.top = ad.location.y + 'px';
+  pinElement.querySelector('img').src = ad.author.avatar;
+  pinElement.querySelector('img').alt = ad.offer.title;
+  return pinElement;
+};
 
 // var createFeatures = function (adFeatures) {
 //   var fragment = document.createDocumentFragment();
@@ -141,7 +146,7 @@ var createAdds = function (addsCount) {
 var renderAdds = function (adds) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adds.length; i++) {
-    // fragment.appendChild(renderAdd(adds[i]));
+    fragment.appendChild(renderAdd(adds[i]));
   }
   mapPinsBlock.appendChild(fragment);
   // renderCard(renderOfferCard(adds[0]));
@@ -151,6 +156,9 @@ var deActivateInput = function () {
   for (var i = 0; i < fildSets.length; i++) {
     fildSets[i].disabled = true;
   }
+  var x = mapPinImage.x;
+  var y = mapPinImage.y;
+  adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_OFFSET);
 };
 
 var activateInput = function () {
@@ -159,45 +167,38 @@ var activateInput = function () {
   }
 };
 
-var checksGuests = function (e) {
-  var count = e.target.value;
-  selectGuests.forEach(function (option) {
-    option.remove();
-    if (option.value !== '3' && Number(option.value) <= Number(count)) {
-      selectGuestsAll.appendChild(option);
-    }
-  });
+var checksGuests = function () {
+  var count = selectRoom.value;
+  checkRoomCapacity(count);
 };
 
 
-var getActivation = function (e) {
+var getActivation = function () {
   mapAd.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
-  adress.value = getRandomInteger(mapPinsBlock.clientTop, mapPinsBlock.clientWidth) - PIN_X_OFFSET + ',' + getRandomInteger(130, 630) - PIN_Y_OFFSET;
   checksGuests();
   renderAdds(createAdds(QANTITY_ADS));
   activateInput();
+  adress.value = (mapPinImage.x + MAIN_PIN_X_OFFSET) + ',' + (mapPinImage.y + MAIN_PIN_Y_ARROW_OFFSET);
 };
 
 var onPinMousedown = function (e) {
   if (typeof e === 'object' && e.button === 0) {
     getActivation(e);
   }
-  mapPinMousedown.removeEventListener('mousedown', onPinMousedown);
+  mapPin.removeEventListener('mousedown', onPinMousedown);
+  mapPin.removeEventListener('keydown', onActivationKeydown);
 };
 
 var onActivationKeydown = function (e) {
   if (e.key === ENTER_KEY) {
     getActivation(e);
   }
-  mapPinMousedown.removeEventListener('keydown', onActivationKeydown);
+  mapPin.removeEventListener('keydown', onActivationKeydown);
+  mapPin.removeEventListener('mousedown', onPinMousedown);
 };
 
-
-var onSelectRoom = function (e) {
-
-  var count = e.target.value;
-
+var checkRoomCapacity = function (count) {
   selectGuests.forEach(function (option) {
     option.remove();
     if (option.value !== '0' && Number(option.value) <= Number(count)) {
@@ -213,13 +214,14 @@ var onSelectRoom = function (e) {
   });
 };
 
-var getValueAddres = function () {
-  adress.value = (location.x - PIN_X_OFFSET) + ',' + (location.y - PIN_Y_OFFSET / 2);
-  return adress;
+var onSelectRoom = function (e) {
+
+  var count = e.target.value;
+  checkRoomCapacity(count);
+
 };
 
-getValueAddres();
 deActivateInput();
-mapPinMousedown.addEventListener('mousedown', onPinMousedown);
-mapPinMousedown.addEventListener('keydown', onActivationKeydown);
+mapPin.addEventListener('mousedown', onPinMousedown);
+mapPin.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
