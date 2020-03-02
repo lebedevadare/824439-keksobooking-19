@@ -8,6 +8,7 @@ var MAIN_PIN_Y_OFFSET = 31;
 var MAIN_PIN_Y_ARROW_OFFSET = 84;
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
 // var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
@@ -16,7 +17,11 @@ var mapPinImage = mapPin.querySelector('img');
 // var mapPin = mapPinsBlock.querySelector('button');
 // var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
+var priceNight = form.querySelector('#price');
+var typeOfHousing = form.querySelector('#type');
 var fildSets = form.querySelectorAll('fieldset');
+var timeoutInput = form.querySelector('#timeout');
+var timeinInput = form.querySelector('#timein');
 var adress = document.querySelector('#address');
 var selectRoom = document.querySelector('#room_number');
 var selectGuestsAll = document.querySelector('#capacity');
@@ -37,6 +42,13 @@ var photos = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 //   'house': 'Дом',
 //   'palace': 'Дворец'
 // };
+
+var priceHousing = {
+  'bungalo': '0',
+  'flat': '1000',
+  'house': '5000',
+  'palace': '10000'
+};
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -221,7 +233,29 @@ var onSelectRoom = function (e) {
 
 };
 
+var validationTypeHousing = function () {
+  if (typeOfHousing.value === 'bungalo') {
+    priceNight.placeholder = 0;
+  } else if (typeOfHousing.value === 'flat') {
+    priceNight.placeholder = 1000;
+  } else if (typeOfHousing.value === 'house') {
+    priceNight.placeholder = 5000;
+  } else if (typeOfHousing.value === 'palace') {
+    priceNight.placeholder = 10000;
+  }
+};
+
+var timingTime = function (e) {
+  if (e.target === timeoutInput) {
+    timeinInput.value = e.target.value;
+  } else if (e.target === timeinInput) {
+    timeoutInput.value = e.target.value;
+  }
+};
+
 deActivateInput();
 mapPin.addEventListener('mousedown', onPinMousedown);
 mapPin.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
+typeOfHousing.addEventListener('change', validationTypeHousing);
+timeinInput.addEventListener('change', timingTime);
