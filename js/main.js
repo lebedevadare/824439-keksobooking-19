@@ -235,12 +235,16 @@ var onSelectRoom = function (e) {
 var validationTypeHousing = function () {
   if (typeOfHousing.value === 'bungalo') {
     priceNight.placeholder = 0;
+    priceNight.min = 0;
   } else if (typeOfHousing.value === 'flat') {
     priceNight.placeholder = 1000;
+    priceNight.min = 1000;
   } else if (typeOfHousing.value === 'house') {
     priceNight.placeholder = 5000;
+    priceNight.min = 5000;
   } else if (typeOfHousing.value === 'palace') {
     priceNight.placeholder = 10000;
+    priceNight.min = 10000;
   }
 };
 
@@ -254,7 +258,8 @@ var timingTime = function (e) {
 
 var openAdd = function (e) {
   if (e.target && e.target.matches('map__pin--main')) {
-    renderAdds(createAdds(QANTITY_ADS));
+    //  renderAdds(createAdds(QANTITY_ADS));
+    renderCard(renderOfferCard(adds[0]));
   }
 };
 
