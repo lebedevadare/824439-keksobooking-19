@@ -3,6 +3,7 @@ var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
 var ENTER_KEY = 'Enter';
+var ESC_KEY = 'Escape';
 var MAIN_PIN_X_OFFSET = 31;
 var MAIN_PIN_Y_OFFSET = 31;
 var MAIN_PIN_Y_ARROW_OFFSET = 84;
@@ -13,6 +14,7 @@ var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPin = mapPinsBlock.querySelector('.map__pin--main');
 var mapPinImage = mapPin.querySelector('img');
 // var mapPin = mapPinsBlock.querySelector('button');
+var buttonClose = document.querySelector('.popup__close');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var priceNight = form.querySelector('#price');
@@ -47,6 +49,8 @@ var typesHousing = {
 //   'house': '5000',
 //   'palace': '10000'
 // };
+
+
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -142,6 +146,7 @@ var renderOfferCard = function (card) {
   cardElement.querySelector('.popup__type').textContent = typesHousing[card.offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  cardElement.querySelector('.popup__avatar').src = card.author.avatar;
   popupFeatures.innerHTML = '';
   popupFeatures.appendChild(createFeatures(card.offer.features));
   photoPopup.innerHTML = '';
@@ -154,13 +159,17 @@ var renderCard = function (cardElement) {
   mapAd.insertBefore(cardElement, filterContainer);
 };
 
+var adds = createAdds(QANTITY_ADS);
+var pinsElements = [];
+
 var renderAdds = function (adds) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adds.length; i++) {
-    fragment.appendChild(renderAdd(adds[i]));
+    var pinElement = renderAdd(adds[i]);
+    fragment.appendChild(pinElement);
+    pinsElements.push(pinElement);
   }
   mapPinsBlock.appendChild(fragment);
-  renderCard(renderOfferCard(adds[0]));
 };
 
 var deActivateInput = function () {
@@ -188,7 +197,8 @@ var activation = function () {
   mapAd.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
   checksGuests();
-  renderAdds(createAdds(QANTITY_ADS));
+  validationTypeHousing();
+  renderAdds(adds);
   activateInput();
   adress.value = (mapPinImage.x + MAIN_PIN_X_OFFSET) + ',' + (mapPinImage.y + MAIN_PIN_Y_ARROW_OFFSET);
 };
@@ -256,13 +266,38 @@ var timingTime = function (e) {
   }
 };
 
-var openAdd = function (e) {
-  if (e.target && e.target.matches('map__pin--main')) {
-    //  renderAdds(createAdds(QANTITY_ADS));
-    renderCard(renderOfferCard(adds[0]));
+var onMapPinsBlockMousedown = function (e) {
+  if (e.button !== 0) {
+    return;
+  }
+  removeCardElement();
+  var targetPin;
+  if (e.target.classList.contains('map__pin') && !e.target.classList.contains('map__pin--main')) {
+    targetPin = e.target;
+    // ;
+  } else if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('map__pin') && !e.target.parentElement.classList.contains('map__pin--main')){
+    targetPin = e.target.parentElement;
+  }
+  if (targetPin) {
+    var index = pinsElements.indexOf(targetPin);
+    if (index !== -1 && index < adds.length) {
+      renderCard(renderOfferCard(adds[index]));
+    }
   }
 };
 
+var onPinEscPress = function (e) {
+  if (e.key === ESC_KEY) {
+    removeCardElement();
+  }
+};
+
+var removeCardElement = function () {
+  var cardElement = document.querySelector('.map__card');
+  if (cardElement) {
+    cardElement.remove();
+  }
+};
 
 deActivateInput();
 mapPin.addEventListener('mousedown', onPinMousedown);
@@ -270,4 +305,7 @@ mapPin.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
 typeOfHousing.addEventListener('change', validationTypeHousing);
 timeinInput.addEventListener('change', timingTime);
-mapAd.addEventListener('mousedown', openAdd);
+timeoutInput.addEventListener('change', timingTime);
+mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
+buttonClose.addEventListener('click', removeCardElement);
+
