@@ -9,12 +9,12 @@ var MAIN_PIN_Y_OFFSET = 31;
 var MAIN_PIN_Y_ARROW_OFFSET = 84;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
+var card = document.querySelector('#card');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPin = mapPinsBlock.querySelector('.map__pin--main');
 var mapPinImage = mapPin.querySelector('img');
-// var mapPin = mapPinsBlock.querySelector('button');
-var buttonClose = document.querySelector('.popup__close');
+var button = document.querySelector('.popup__close');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var priceNight = form.querySelector('#price');
@@ -286,19 +286,27 @@ var onMapPinsBlockMousedown = function (e) {
   }
 };
 
+var removeCardElement = function () {
+  // var cardElement = document.querySelector('.map__card');
+  // if (cardElement) {
+  //   cardElement.remove();
+  // }
+  card.classList.add('hidden');
+};
+
+
 var onPinEscPress = function (e) {
   if (e.key === ESC_KEY) {
     removeCardElement();
   }
 };
 
-var removeCardElement = function () {
-  var cardElement = document.querySelector('.map__card');
-  if (cardElement) {
-    cardElement.remove();
+var onPinCloseCard = function (e) {
+  if (typeof e === 'object' && e.button === 0) {
+    removeCardElement();
   }
 };
-
+console.log(button);
 deActivateInput();
 mapPin.addEventListener('mousedown', onPinMousedown);
 mapPin.addEventListener('keydown', onActivationKeydown);
@@ -307,5 +315,6 @@ typeOfHousing.addEventListener('change', validationTypeHousing);
 timeinInput.addEventListener('change', timingTime);
 timeoutInput.addEventListener('change', timingTime);
 mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
-buttonClose.addEventListener('click', removeCardElement);
+button.addEventListener('keydown', onPinEscPress);
+button.addEventListener('mousedown', onPinCloseCard);
 
