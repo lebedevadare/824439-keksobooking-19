@@ -265,6 +265,25 @@ var timingTime = function (e) {
   }
 };
 
+var removeCardElement = function () {
+  var cardElement = document.querySelector('.map__card');
+  if (cardElement) {
+    cardElement.remove();
+  }
+};
+
+var onPinEscPress = function (e) {
+  if (e.key === ESC_KEY) {
+    removeCardElement();
+  }
+};
+
+var onPinCloseCard = function (e) {
+  if (typeof e === 'object' && e.button === 0) {
+    removeCardElement();
+  }
+};
+
 var onMapPinsBlockMousedown = function (e) {
   if (e.button !== 0) {
     return;
@@ -283,30 +302,12 @@ var onMapPinsBlockMousedown = function (e) {
       renderCard(renderOfferCard(adds[index]));
     }
   }
+  var cardOnMap = document.querySelector('.map__card');
+  cardOnMap.addEventListener('keydown', onPinEscPress);
+  cardOnMap.addEventListener('mousedown', onPinCloseCard);
 };
 
-var removeCardElement = function () {
-  var cardElement = document.querySelector('.map__card');
-  if (cardElement) {
-    cardElement.remove();
-  }
-};
-
-
-var onPinEscPress = function (e) {
-  if (e.key === ESC_KEY) {
-    removeCardElement();
-  }
-};
-
-var onPinCloseCard = function (e) {
-  if (typeof e === 'object' && e.button === 0) {
-    removeCardElement();
-  }
-};
 deActivateInput();
-
-
 mapPin.addEventListener('mousedown', onPinMousedown);
 mapPin.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
@@ -314,9 +315,7 @@ typeOfHousing.addEventListener('change', validationTypeHousing);
 timeinInput.addEventListener('change', timingTime);
 timeoutInput.addEventListener('change', timingTime);
 mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
-var button = document.querySelector('.popup__close');
-button.addEventListener('click', onPinCloseCard);
-card.addEventListener('keydown', onPinEscPress);
+
 
 
 
