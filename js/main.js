@@ -9,7 +9,6 @@ var MAIN_PIN_Y_OFFSET = 31;
 var MAIN_PIN_Y_ARROW_OFFSET = 84;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-var card = document.querySelector('#card');
 var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPin = mapPinsBlock.querySelector('.map__pin--main');
@@ -42,12 +41,6 @@ var typesHousing = {
   'palace': 'Дворец'
 };
 
-// var priceHousing = {
-//   'bungalo': '0',
-//   'flat': '1000',
-//   'house': '5000',
-//   'palace': '10000'
-// };
 
 
 var getRandomInteger = function (min, max) {
@@ -315,8 +308,6 @@ typeOfHousing.addEventListener('change', validationTypeHousing);
 timeinInput.addEventListener('change', timingTime);
 timeoutInput.addEventListener('change', timingTime);
 mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
-
-
 
 
 
