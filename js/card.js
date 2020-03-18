@@ -5,6 +5,7 @@
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
   var mapAd = document.querySelector('.map');
   var mapPinsBlock = mapAd.querySelector('.map__pins');
+  var buttonDrag = mapPinsBlock.querySelector('.map__pin--main');
   var filterContainer = mapAd.querySelector('.map__filters-container');
   var typesHousing = {
     'flat': 'Квартира',
@@ -121,5 +122,33 @@
     renderCard: renderCard,
     pinsElements: pinsElements
   };
+  buttonDrag.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    var startCoords = {
+      x: e.clientX,
+      y: e.clientY
+    };
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
+      buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 })();
 
