@@ -1,12 +1,15 @@
 'use strict';
 (function () {
   var ESC_KEY = 'Escape';
+  var MAIN_PIN_X_OFFSET = 31;
+  var MAIN_PIN_Y_ARROW_OFFSET = 84;
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
   var mapAd = document.querySelector('.map');
   var mapPinsBlock = mapAd.querySelector('.map__pins');
   var buttonDrag = mapPinsBlock.querySelector('.map__pin--main');
   var filterContainer = mapAd.querySelector('.map__filters-container');
+  var adress = document.querySelector('#address');
   var typesHousing = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -138,8 +141,9 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
-      buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
+      var y = buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
+      var x = buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
+      adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_ARROW_OFFSET);
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
