@@ -3,6 +3,7 @@ var QANTITY_ADS = 8;
 var PIN_X_OFFSET = 20;
 var PIN_Y_OFFSET = 40;
 var ENTER_KEY = 'Enter';
+var ESC_KEY = 'Escape';
 var MAIN_PIN_X_OFFSET = 31;
 var MAIN_PIN_Y_OFFSET = 31;
 var MAIN_PIN_Y_ARROW_OFFSET = 84;
@@ -12,7 +13,6 @@ var mapAd = document.querySelector('.map');
 var mapPinsBlock = mapAd.querySelector('.map__pins');
 var mapPin = mapPinsBlock.querySelector('.map__pin--main');
 var mapPinImage = mapPin.querySelector('img');
-// var mapPin = mapPinsBlock.querySelector('button');
 var filterContainer = mapAd.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var priceNight = form.querySelector('#price');
@@ -40,13 +40,7 @@ var typesHousing = {
   'house': 'Дом',
   'palace': 'Дворец'
 };
-
-// var priceHousing = {
-//   'bungalo': '0',
-//   'flat': '1000',
-//   'house': '5000',
-//   'palace': '10000'
-// };
+// data.js — модуль, который создаёт данные;
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -131,7 +125,7 @@ var createPhotos = function (adPhotos) {
   }
   return fragment;
 };
-
+// card.js — модуль, который отвечает за создание карточки объявлений;
 var renderOfferCard = function (card) {
   var cardElement = cardTemplate.cloneNode(true);
   var popupFeatures = cardElement.querySelector('.popup__features');
@@ -142,6 +136,7 @@ var renderOfferCard = function (card) {
   cardElement.querySelector('.popup__type').textContent = typesHousing[card.offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = card.offer.rooms + ' комнаты для ' + card.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time ').textContent = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
+  cardElement.querySelector('.popup__avatar').src = card.author.avatar;
   popupFeatures.innerHTML = '';
   popupFeatures.appendChild(createFeatures(card.offer.features));
   photoPopup.innerHTML = '';
@@ -154,15 +149,19 @@ var renderCard = function (cardElement) {
   mapAd.insertBefore(cardElement, filterContainer);
 };
 
-var renderAdds = function (adds) {
+var adds = createAdds(QANTITY_ADS);
+var pinsElements = [];
+
+var renderAdds = function (add) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adds.length; i++) {
-    fragment.appendChild(renderAdd(adds[i]));
+  for (var i = 0; i < add.length; i++) {
+    var pinElement = renderAdd(adds[i]);
+    fragment.appendChild(pinElement);
+    pinsElements.push(pinElement);
   }
   mapPinsBlock.appendChild(fragment);
-  renderCard(renderOfferCard(adds[0]));
 };
-
+// form.js — модуль, который работает с формой объявления.
 var deActivateInput = function () {
   for (var i = 0; i < fildSets.length; i++) {
     fildSets[i].disabled = true;
@@ -188,7 +187,8 @@ var activation = function () {
   mapAd.classList.remove('map--faded');
   form.classList.remove('ad-form--disabled');
   checksGuests();
-  renderAdds(createAdds(QANTITY_ADS));
+  validationTypeHousing();
+  renderAdds(adds);
   activateInput();
   adress.value = (mapPinImage.x + MAIN_PIN_X_OFFSET) + ',' + (mapPinImage.y + MAIN_PIN_Y_ARROW_OFFSET);
 };
@@ -235,12 +235,16 @@ var onSelectRoom = function (e) {
 var validationTypeHousing = function () {
   if (typeOfHousing.value === 'bungalo') {
     priceNight.placeholder = 0;
+    priceNight.min = 0;
   } else if (typeOfHousing.value === 'flat') {
     priceNight.placeholder = 1000;
+    priceNight.min = 1000;
   } else if (typeOfHousing.value === 'house') {
     priceNight.placeholder = 5000;
+    priceNight.min = 5000;
   } else if (typeOfHousing.value === 'palace') {
     priceNight.placeholder = 10000;
+    priceNight.min = 10000;
   }
 };
 
@@ -252,12 +256,46 @@ var timingTime = function (e) {
   }
 };
 
-var openAdd = function (e) {
-  if (e.target && e.target.matches('map__pin--main')) {
-    renderAdds(createAdds(QANTITY_ADS));
+var removeCardElement = function () {
+  var cardElement = document.querySelector('.map__card');
+  if (cardElement) {
+    cardElement.remove();
   }
 };
 
+var onPinEscPress = function (e) {
+  if (e.key === ESC_KEY) {
+    removeCardElement();
+  }
+};
+
+var onPinCloseCard = function (e) {
+  if (typeof e === 'object' && e.button === 0) {
+    removeCardElement();
+  }
+};
+
+var onMapPinsBlockMousedown = function (e) {
+  if (e.button !== 0) {
+    return;
+  }
+  removeCardElement();
+  var targetPin;
+  if (e.target.classList.contains('map__pin') && !e.target.classList.contains('map__pin--main')) {
+    targetPin = e.target;
+  } else if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('map__pin') && !e.target.parentElement.classList.contains('map__pin--main')) {
+    targetPin = e.target.parentElement;
+  }
+  if (targetPin) {
+    var index = pinsElements.indexOf(targetPin);
+    if (index !== -1 && index < adds.length) {
+      renderCard(renderOfferCard(adds[index]));
+    }
+  }
+  var cardOnMap = document.querySelector('.map__card');
+  document.addEventListener('keydown', onPinEscPress);
+  cardOnMap.addEventListener('mousedown', onPinCloseCard);
+};
 
 deActivateInput();
 mapPin.addEventListener('mousedown', onPinMousedown);
@@ -265,4 +303,5 @@ mapPin.addEventListener('keydown', onActivationKeydown);
 selectRoom.addEventListener('change', onSelectRoom);
 typeOfHousing.addEventListener('change', validationTypeHousing);
 timeinInput.addEventListener('change', timingTime);
-mapAd.addEventListener('mousedown', openAdd);
+timeoutInput.addEventListener('change', timingTime);
+mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
