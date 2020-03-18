@@ -74,7 +74,7 @@
     }
     mapPinsBlock.appendChild(fragment);
   };
-  renderAdds(window.data.adds);
+
   var removeCardElement = function () {
     var cardElement = document.querySelector('.map__card');
     if (cardElement) {
@@ -108,13 +108,13 @@
       var index = pinsElements.indexOf(targetPin);
       if (index !== -1 && index < window.data.adds.length) {
         renderCard(renderOfferCard(window.data.adds[index]));
+        var cardOnMap = document.querySelector('.map__card');
+        document.addEventListener('keydown', onPinEscPress);
+        cardOnMap.addEventListener('mousedown', onPinCloseCard);
       }
     }
-    var cardOnMap = document.querySelector('.map__card');
-    document.addEventListener('keydown', onPinEscPress);
-    cardOnMap.addEventListener('mousedown', onPinCloseCard);
   };
-  qmapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
+  mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
   window.card = {
     renderOfferCard: renderOfferCard,
     renderAdds: renderAdds,
