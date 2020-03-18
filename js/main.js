@@ -283,8 +283,7 @@ var onMapPinsBlockMousedown = function (e) {
   var targetPin;
   if (e.target.classList.contains('map__pin') && !e.target.classList.contains('map__pin--main')) {
     targetPin = e.target;
-    // ;
-  } else if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('map__pin') && !e.target.parentElement.classList.contains('map__pin--main')){
+  } else if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('map__pin') && !e.target.parentElement.classList.contains('map__pin--main')) {
     targetPin = e.target.parentElement;
   }
   if (targetPin) {
