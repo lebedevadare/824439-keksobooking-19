@@ -3,6 +3,7 @@
   var ESC_KEY = 'Escape';
   var MAIN_PIN_X_OFFSET = 31;
   var MAIN_PIN_Y_ARROW_OFFSET = 84;
+  var IMG_WIDTH = 62;
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
   var mapAd = document.querySelector('.map');
@@ -141,9 +142,34 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      var y = buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
-      var x = buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
-      adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_ARROW_OFFSET);
+      var limits = {
+        top: 130,
+        right: mapAd.clientWidth - IMG_WIDTH,
+        bottom: 630,
+        left: mapAd.clientLeft
+      };
+      var pinTop = buttonDrag.offsetTop;
+      var pinLeft = buttonDrag.offsetLeft;
+
+      if (pinTop < limits.top) {
+        buttonDrag.style.top = limits.top + 'px';
+      } else if (pinTop > limits.bottom) {
+        buttonDrag.style.top = limits.bottom + 'px';
+      } else {
+        buttonDrag.style.top = (pinTop - shift.y) + 'px';
+      }
+
+      if (pinLeft < limits.left) {
+        buttonDrag.style.left = limits.left + 'px';
+      } else if (pinLeft > limits.right) {
+        buttonDrag.style.left = limits.right + 'px';
+      } else {
+        buttonDrag.style.left = (pinLeft - shift.x) + 'px';
+      }
+      // var y = buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
+      // var x = buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
+      // adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_ARROW_OFFSET);
+      adress.value = (pinLeft - shift.x + MAIN_PIN_X_OFFSET) + ', ' + (pinTop - shift.y + MAIN_PIN_Y_ARROW_OFFSET);
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
