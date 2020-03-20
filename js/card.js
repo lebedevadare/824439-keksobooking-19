@@ -1,11 +1,16 @@
 'use strict';
 (function () {
   var ESC_KEY = 'Escape';
+  var MAIN_PIN_X_OFFSET = 31;
+  var MAIN_PIN_Y_ARROW_OFFSET = 84;
+  var IMG_WIDTH = 62;
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
   var mapAd = document.querySelector('.map');
   var mapPinsBlock = mapAd.querySelector('.map__pins');
+  var buttonDrag = mapPinsBlock.querySelector('.map__pin--main');
   var filterContainer = mapAd.querySelector('.map__filters-container');
+  var adress = document.querySelector('#address');
   var typesHousing = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -121,5 +126,59 @@
     renderCard: renderCard,
     pinsElements: pinsElements
   };
+  buttonDrag.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    var startCoords = {
+      x: e.clientX,
+      y: e.clientY
+    };
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+      var limits = {
+        top: 130,
+        right: mapAd.clientWidth - IMG_WIDTH,
+        bottom: 630,
+        left: mapAd.clientLeft
+      };
+      var pinTop = buttonDrag.offsetTop;
+      var pinLeft = buttonDrag.offsetLeft;
+
+      if (pinTop < limits.top) {
+        buttonDrag.style.top = limits.top + 'px';
+      } else if (pinTop > limits.bottom) {
+        buttonDrag.style.top = limits.bottom + 'px';
+      } else {
+        buttonDrag.style.top = (pinTop - shift.y) + 'px';
+      }
+
+      if (pinLeft < limits.left) {
+        buttonDrag.style.left = limits.left + 'px';
+      } else if (pinLeft > limits.right) {
+        buttonDrag.style.left = limits.right + 'px';
+      } else {
+        buttonDrag.style.left = (pinLeft - shift.x) + 'px';
+      }
+      // var y = buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
+      // var x = buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
+      // adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_ARROW_OFFSET);
+      adress.value = (pinLeft - shift.x + MAIN_PIN_X_OFFSET) + ', ' + (pinTop - shift.y + MAIN_PIN_Y_ARROW_OFFSET);
+    };
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
 })();
 
