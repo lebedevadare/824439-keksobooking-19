@@ -180,5 +180,12 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+  window.load(function (cards) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < cards.length; i++) {
+      fragment.appendChild(renderAdd(window.data.adds[i]));
+    }
+    mapPinsBlock.appendChild(fragment);
+  });
 })();
 

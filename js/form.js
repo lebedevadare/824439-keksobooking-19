@@ -116,4 +116,14 @@
   typeOfHousing.addEventListener('change', validationTypeHousing);
   timeinInput.addEventListener('change', timingTime);
   timeoutInput.addEventListener('change', timingTime);
+  form.addEventListener('submit', function (e) {
+    var submitButton = form.querySelector('.ad-form__submit');
+    submitButton.textContent = 'Данные отправляются';
+    submitButton.disabled = true;
+    window.upload(new FormData(form), function (response) {
+      submitButton.textContent = 'Опубликовать';
+      submitButton.disabled = false;
+    });
+    e.preventDefault();
+  });
 })();
