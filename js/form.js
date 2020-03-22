@@ -4,7 +4,6 @@
   var MAIN_PIN_Y_OFFSET = 31;
   var MAIN_PIN_Y_ARROW_OFFSET = 84;
   var ENTER_KEY = 'Enter';
-  // var ESC_KEY = 'Escape';
   var form = document.querySelector('.ad-form');
   var timeoutInput = form.querySelector('#timeout');
   var timeinInput = form.querySelector('#timein');
@@ -42,7 +41,9 @@
     form.classList.remove('ad-form--disabled');
     checksGuests();
     validationTypeHousing();
-    window.card.renderAdds(window.data.adds);
+    window.load(function (offers) {
+      window.card.renderAdds(offers);
+    });
     activateInput();
     adress.value = (mapPinImage.x + MAIN_PIN_X_OFFSET) + ',' + (mapPinImage.y + MAIN_PIN_Y_ARROW_OFFSET);
   };

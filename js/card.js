@@ -70,10 +70,10 @@
   var renderCard = function (cardElement) {
     mapAd.insertBefore(cardElement, filterContainer);
   };
-  var renderAdds = function (add) {
+  var renderAdds = function (adds) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < add.length; i++) {
-      var pinElement = renderAdd(window.data.adds[i]);
+    for (var i = 0; i < adds.length; i++) {
+      var pinElement = renderAdd(adds[i]);
       fragment.appendChild(pinElement);
       pinsElements.push(pinElement);
     }
@@ -98,6 +98,12 @@
     }
   };
   var onMapPinsBlockMousedown = function (e) {
+    window.load(function (offers) {
+      for (var i = 0; i < offers.length; i++) {
+        var dataCards = [];
+        dataCards.push(offers[i]);
+      }
+    });
     if (e.button !== 0) {
       return;
     }
@@ -111,8 +117,8 @@
     }
     if (targetPin) {
       var index = pinsElements.indexOf(targetPin);
-      if (index !== -1 && index < window.data.adds.length) {
-        renderCard(renderOfferCard(window.data.adds[index]));
+      if (index !== -1 && index < dataCards.length) {
+        renderCard(renderOfferCard(dataCards[index]));
         var cardOnMap = document.querySelector('.map__card');
         document.addEventListener('keydown', onPinEscPress);
         cardOnMap.addEventListener('mousedown', onPinCloseCard);
@@ -120,12 +126,7 @@
     }
   };
   mapPinsBlock.addEventListener('mousedown', onMapPinsBlockMousedown);
-  window.card = {
-    renderOfferCard: renderOfferCard,
-    renderAdds: renderAdds,
-    renderCard: renderCard,
-    pinsElements: pinsElements
-  };
+
   buttonDrag.addEventListener('mousedown', function (e) {
     e.preventDefault();
     var startCoords = {
@@ -166,9 +167,6 @@
       } else {
         buttonDrag.style.left = (pinLeft - shift.x) + 'px';
       }
-      // var y = buttonDrag.style.top = (buttonDrag.offsetTop - shift.y) + 'px';
-      // var x = buttonDrag.style.left = (buttonDrag.offsetLeft - shift.x) + 'px';
-      // adress.value = (x + MAIN_PIN_X_OFFSET) + ',' + (y + MAIN_PIN_Y_ARROW_OFFSET);
       adress.value = (pinLeft - shift.x + MAIN_PIN_X_OFFSET) + ', ' + (pinTop - shift.y + MAIN_PIN_Y_ARROW_OFFSET);
     };
     var onMouseUp = function (upEvt) {
@@ -180,12 +178,12 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-  window.load(function (cards) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < cards.length; i++) {
-      fragment.appendChild(renderAdd(window.data.adds[i]));
-    }
-    mapPinsBlock.appendChild(fragment);
-  });
+
+  window.card = {
+    renderOfferCard: renderOfferCard,
+    renderAdds: renderAdds,
+    renderCard: renderCard,
+    pinsElements: pinsElements,
+  };
 })();
 
