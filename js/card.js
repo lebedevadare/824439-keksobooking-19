@@ -97,26 +97,26 @@
       removeCardElement();
     }
   };
+
   var onMapPinsBlockMousedown = function (e) {
-    window.load(function (offers) {
-      for (var i = 0; i < offers.length; i++) {
-        var dataCards = [];
-        dataCards.push(offers[i]);
-      }
-    });
     if (e.button !== 0) {
       return;
     }
     removeCardElement();
+    var dataCards = [];
     var targetPin;
     if (e.target.classList.contains('map__pin') && !e.target.classList.contains('map__pin--main')) {
       targetPin = e.target;
-      // ;
     } else if (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('map__pin') && !e.target.parentElement.classList.contains('map__pin--main')) {
       targetPin = e.target.parentElement;
     }
     if (targetPin) {
       var index = pinsElements.indexOf(targetPin);
+      window.load(function (offers) {
+        for (var i = 0; i < offers.length; i++) {
+          dataCards.push(offers[i]);
+        }
+      });
       if (index !== -1 && index < dataCards.length) {
         renderCard(renderOfferCard(dataCards[index]));
         var cardOnMap = document.querySelector('.map__card');
